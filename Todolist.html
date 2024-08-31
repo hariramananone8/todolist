@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/5ba2fdc186.js" crossorigin="anonymous"></script>
+    <title>To do list</title>
+    <style>
+            body {
+            width: 100%;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        .card{
+            display: block;
+            background-color: white;
+            height: fit-content;
+            width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            
+        }
+        .title{
+            display: flex;
+            text-align: left;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            margin-left: 10px;
+            color: blue;
+        }
+        .title img{
+            scale: 0.5;
+            margin-left: 8px;
+           
+        }
+        .input-content{
+            display: flex;
+            margin-top: 10px;
+        }
+        input{
+            margin-left: 10px;
+            width: 400px;
+            padding: 10px;   
+        }
+        .lableinput{
+            font-family:Arial, Helvetica, sans-serif;
+            font-size:large;
+            color: black;
+            margin-left: 10px;
+        }
+        button{
+            margin-left: 10px;
+            background-color: rgb(76, 76, 250);
+            color: white;
+            font-family:Verdana, Geneva, Tahoma, sans-serif;
+            font-size: larger;
+            padding: 10px;
+            border-radius: 8px;
+            border: 0px;
+            cursor: pointer;
+        }
+        button :hover{
+            background-color: blueviolet;
+
+        }
+    .list{
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+    ul li{
+        list-style: none;
+        line-height: 1cm;
+       font-size:large;
+       font-family: 'Roboto', sans-serif; ;
+    }
+    ul li::before {
+            content: "\f192"; 
+            font-family: 'Font Awesome 5 Free'; 
+            font-size: 0.85rem;
+            font-weight: 500; 
+            margin-right: 8px; 
+            cursor: pointer;
+        }
+
+      ul li.checked{
+        text-decoration: line-through;
+        color: rgba(4, 50, 255, 0.74);
+      }
+      ul li.checked ::before{      
+        content: "\f00c";
+        font-family: 'Font Awesome 5 Free'; 
+        color: #203afe;
+        cursor: pointer;
+      }
+      ul li.checked ::after{      
+        content: "\f00d";
+        font-family: 'Font Awesome 5 Free'; 
+        color: #fe2020a2;
+        margin-left: 10px;
+        
+        cursor: pointer;
+      }
+      ul li span{
+        margin-right: 100px;
+        display: flex;
+        float: right;
+        color: #fe2020a2;
+        cursor: pointer;
+        font-family: "Font Awesome 6 Free"; 
+        font-weight: 900; 
+      }
+ 
+    </style>
+</head>
+<body>
+      <div class="card">
+        <div class="title">
+            <h1> <i class="fa-solid fa-list" style="color: #203afe;"></i>  To DO List </h1>
+        </div>
+        <label class="lableinput">Add your task </i></label>
+        <div class="input-content">
+        <input type="text" id="input" class="input" placeholder="Enter yout task">
+         <button id="task">ADD</button>
+        </div>
+        <ul id="list">
+           <!-- <li class="checked" id="task">task 1</li>
+            <li>task 2</li>
+            <li>task 3</li>
+        </ul> -->
+      </div>   
+
+
+      <script>
+        const inputtxt = document.getElementById("input");
+        const addbtn = document.getElementById("task");
+        const list = document.getElementById("list");
+    
+        addbtn.addEventListener('click', addTask);
+    
+        function clear() {
+            inputtxt.value = "";
+        }
+    
+        function addTask() {
+            const taskText = inputtxt.value.trim();
+            if (taskText === "") {
+                alert("Enter a task");
+                return;
+            }
+    
+            let li = document.createElement("li");
+            li.innerHTML = `${taskText} <span class="fa fa-times"></span>`;
+            list.appendChild(li);
+            clear();
+            saveData();
+        }
+    
+        list.addEventListener("click", function(e) {
+            if (e.target.tagName === "LI") {
+                e.target.classList.toggle("checked");
+                saveData();
+            } else if (e.target.classList.contains("fa-times")) {
+                e.target.parentElement.remove();
+                saveData();
+            }
+        });
+    
+        function saveData() {
+            const tasks = [];
+            list.querySelectorAll("li").forEach(li => {
+                tasks.push({
+                    text: li.firstChild.textContent.trim(),
+                    checked: li.classList.contains("checked")
+                });
+            });
+            localStorage.setItem("data", JSON.stringify(tasks));
+        }
+    
+        function showTask() {
+            const tasks = JSON.parse(localStorage.getItem("data")) || [];
+            tasks.forEach(task => {
+                let li = document.createElement("li");
+                li.textContent = task.text;
+                if (task.checked) {
+                    li.classList.add("checked");
+                }
+                let span = document.createElement("span");
+                span.className = "fa fa-times";
+                li.appendChild(span);
+                list.appendChild(li);
+            });
+        }
+    
+        showTask();
+    </script>
+    
+</body>
+</html>
